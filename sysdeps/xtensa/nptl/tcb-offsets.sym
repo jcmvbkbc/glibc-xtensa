@@ -2,5 +2,4 @@
 #include <tls.h>
 
 MULTIPLE_THREADS_OFFSET	offsetof (struct pthread, header.multiple_threads)
-PID			offsetof (struct pthread, pid)
 TID			offsetof (struct pthread, tid)

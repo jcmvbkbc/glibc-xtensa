@@ -16,10 +16,10 @@
    Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
    Boston, MA 02110-1301, USA.  */
 
-#ifndef _BITS_ATOMIC_H
-#define _BITS_ATOMIC_H  1
+#ifndef _XTENSA_ATOMIC_MACHINE_H
+#define _XTENSA_ATOMIC_MACHINE_H  1
 
-#include <inttypes.h>
+#include <stdint.h>
 
 typedef int32_t atomic32_t;
 typedef uint32_t uatomic32_t;
@@ -36,6 +36,9 @@ typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
+#define __HAVE_64B_ATOMICS 0
+#define USE_ATOMIC_COMPILER_BUILTINS 1
+#define ATOMIC_EXCHANGE_USES_CAS 0
 
 /* Xtensa has only a 32-bit form of a store-conditional instruction.  */
 

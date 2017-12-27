@@ -3197,6 +3197,29 @@ enum
 /* Keep this the last entry.  */
 #define R_390_NUM		62
 
+/* Xtensa-specific declarations */
+
+/* Xtensa values for the Dyn d_tag field.  */
+#define DT_XTENSA_GOT_LOC_OFF	(DT_LOPROC + 0)
+#define DT_XTENSA_GOT_LOC_SZ	(DT_LOPROC + 1)
+#define DT_XTENSA_NUM		2
+
+/* Xtensa relocations.  */
+#define R_XTENSA_NONE		0
+#define R_XTENSA_32		1
+#define R_XTENSA_RTLD		2
+#define R_XTENSA_GLOB_DAT	3
+#define R_XTENSA_JMP_SLOT	4
+#define R_XTENSA_RELATIVE	5
+#define R_XTENSA_PLT		6
+#define R_XTENSA_OP0		8
+#define R_XTENSA_OP1		9
+#define R_XTENSA_OP2		10
+#define R_XTENSA_TLSDESC_FN	50
+#define R_XTENSA_TLSDESC_ARG	51
+#define R_XTENSA_TLS_TPOFF	53
+/* Keep this the last entry.  */
+#define R_XTENSA_NUM		56
 
 /* CRIS relocations.  */
 #define R_CRIS_NONE		0
