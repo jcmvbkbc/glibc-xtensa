@@ -21,6 +21,7 @@
    Boston, MA 02111-1307, USA.  */
 
 
+#define XCHAL_UNALIGNED_LOAD_EXCEPTION 1
 #define XCHAL_HAVE_LOOPS 1
 
 	.macro	src_b	r, w0, w1

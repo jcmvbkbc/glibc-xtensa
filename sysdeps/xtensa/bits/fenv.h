@@ -65,3 +65,11 @@ typedef unsigned int fenv_t;
 /* Floating-point environment where non of the exception is masked.  */
 # define FE_NOMASK_ENV	((const fenv_t *) -127)
 #endif
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Type representing floating-point control modes.  */
+typedef unsigned int femode_t;
+
+/* Default floating-point control modes.  */
+# define FE_DFL_MODE	((const femode_t *) -1L)
+#endif

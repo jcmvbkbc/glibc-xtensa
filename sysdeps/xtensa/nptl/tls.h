@@ -40,6 +40,7 @@
 
 /* The TLS blocks start right after the TCB.  */
 # define TLS_DTV_AT_TP	1
+# define TLS_TCB_AT_TP	0
 
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
@@ -84,8 +85,8 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(tcbp, secondcall)					\
-  ({ __asm__ __volatile__ ("wur %0, threadptr" : : "r" (tcbp)); 0; })
+# define TLS_INIT_TP(tcbp)					\
+  ({ __asm__ __volatile__ ("wur %0, threadptr" : : "r" (tcbp)); NULL; })
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV()							\

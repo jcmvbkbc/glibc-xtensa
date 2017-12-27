@@ -83,6 +83,7 @@ here:	_call0	0f\n\
 
 /* Only RELA relocations are used for Xtensa systems. */
 #define ELF_MACHINE_NO_REL 1
+#define ELF_MACHINE_NO_RELA 0
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -164,6 +165,7 @@ _dl_start_user:\n\
 
 static inline ElfW(Addr)
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
 		       const ElfW(Rela) *reloc,
 		       ElfW(Addr) *reloc_addr, ElfW(Addr) value)
 {
@@ -235,7 +237,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       xtensa_got_location *got_location;
       typedef int (*mprotect_ptr) (__ptr_t, size_t, int);
       mprotect_ptr mprotect_fn;
-      int result;
 
 #ifndef DL_RO_DYN_SECTION
       l->l_info[DT_XTENSA (GOT_LOC_OFF)]->d_un.d_ptr += l->l_addr;
@@ -253,6 +254,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       for (g = 0; g < got_loc_entries; g++)
 	{
 	  caddr_t got_start, got_end;
+	  int result __attribute__((unused));
 
 	  got_start = ((caddr_t) l->l_addr +
 		       (got_location[g].offset & ~(XT_PAGESIZE - 1)));

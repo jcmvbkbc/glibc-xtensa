@@ -23,6 +23,11 @@
 #include <sysdeps/unix/sysv/linux/generic/sysdep.h>
 #include <sys/syscall.h>
 
+/* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
+#include <dl-sysdep.h>
+
+#include <tls.h>
+
 /* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #ifndef __ASSEMBLER__
 #include <errno.h>
@@ -45,7 +50,7 @@
    might return a large offset.  Therefore we must not anymore test
    for < 0, but test for a real error by making sure the value in a2
    is a real error number.  Linus said he will make sure the no syscall
-   returns a value in -1 .. -4095 as a valid result so we can savely
+   returns a value in -1 .. -4095 as a valid result so we can safely
    test with -4095.  */
 
 /* We don't want the label for the error handler to be visible in the symbol
@@ -116,22 +121,20 @@
 	j	L(pseudo_end)
 #else
 # if RTLD_PRIVATE_ERRNO
-#define SYSCALL_ERROR_HANDLER						      \
-	movi	a4, errno@PLT;						      \
+#  define SYSCALL_ERROR_HANDLER						      \
+	movi	a4, rtld_errno;						      \
 	neg	a2, a2;							      \
 	s32i	a2, a4, 0;						      \
 	movi	a2, -1;							      \
 	j	L(pseudo_end)
-# elif defined _LIBC_REENTRANT
-#  if USE__THREAD
-#   ifndef NOT_IN_libc
+# else
+
+#  if IS_IN (libc)
 #    define SYSCALL_ERROR_ERRNO __libc_errno
-#   else
+#  else
 #    define SYSCALL_ERROR_ERRNO errno
-#   endif
-#    error USE__THREAD not implemented
-#  else /* !USE__THREAD */
-#   define SYSCALL_ERROR_HANDLER					      \
+#  endif
+#  define SYSCALL_ERROR_HANDLER						      \
 0:	neg	a2, a2;							      \
 	mov	a6, a2;							      \
 	movi	a4, __errno_location@PLT;				      \
@@ -139,16 +142,7 @@
 	s32i	a2, a6, 0;						      \
 	movi	a2, -1;							      \
 	j	L(pseudo_end)
-#  endif /* !USE__THREAD */
-# else /* !_LIBC_REENTRANT */
-# define SYSCALL_ERROR_HANDLER						      \
-SYSCALL_ERROR_LABEL:							      \
-	movi	a4, errno;						      \
-	neg	a2, a2;							      \
-	s32i	a2, a4, 0;						      \
-	movi	a2, -1;							      \
-	j	L(pseudo_end)
-# endif /* _LIBC_REENTRANT */
+# endif /* RTLD_PRIVATE_ERRNO */
 #endif /* PIC */
 
 /* The register layout upon entering the function is:

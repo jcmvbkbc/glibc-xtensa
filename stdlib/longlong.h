@@ -1537,6 +1537,7 @@ extern UDItype __umulsidi3 (USItype, USItype);
    to expand builtin functions depending on what configuration features
    are available.  This avoids library calls when the operation can be
    performed in-line.  */
+#if 0
 #define umul_ppmm(w1, w0, u, v)						\
   do {									\
     DWunion __w;							\
@@ -1544,6 +1545,7 @@ extern UDItype __umulsidi3 (USItype, USItype);
     w1 = __w.s.high;							\
     w0 = __w.s.low;							\
   } while (0)
+#endif
 #define __umulsidi3(u, v)		__builtin_umulsidi3 (u, v)
 #define count_leading_zeros(COUNT, X)	((COUNT) = __builtin_clz (X))
 #define count_trailing_zeros(COUNT, X)	((COUNT) = __builtin_ctz (X))

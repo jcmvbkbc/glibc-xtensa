@@ -61,6 +61,9 @@ struct __pthread_rwlock_arch_t
    unsigned char __pad2;
 #endif
    int __writer;
+   int dummy;
 };
+
+#define __PTHREAD_RWLOCK_ELISION_EXTRA 0
 
 #endif	/* bits/pthreadtypes.h */
