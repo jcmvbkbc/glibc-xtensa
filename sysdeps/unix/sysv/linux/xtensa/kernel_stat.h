@@ -17,9 +17,7 @@ struct kernel_stat {
 	struct timespec	st_mtim;
 	struct timespec	st_ctim;
 	unsigned long	__unused4;
-#define _HAVE_STAT___UNUSED4
 	unsigned long	__unused5;
-#define _HAVE_STAT___UNUSED5
 };
 
 
@@ -34,15 +32,12 @@ struct kernel_stat64 {
 	long long st_size;		/* Size of file, in bytes. */
 	unsigned long st_blksize;	/* Optimal block size for I/O. */
 	unsigned long __unused2;
-#define _HAVE_STAT64___UNUSED2
 	unsigned long long st_blocks;	/* Number 512-byte blocks allocated. */
 	struct timespec st_atim;	/* Time of last access. */
 	struct timespec st_mtim;	/* Time of last modification. */
 	struct timespec st_ctim;	/* Time of last status change. */
 	unsigned long __unused4;
-#define _HAVE_STAT64___UNUSED4
 	unsigned long __unused5;
-#define _HAVE_STAT64___UNUSED5
 };
 
 #define XSTAT_IS_XSTAT64 0

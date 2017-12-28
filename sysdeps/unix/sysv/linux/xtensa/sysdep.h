@@ -53,13 +53,7 @@
    returns a value in -1 .. -4095 as a valid result so we can safely
    test with -4095.  */
 
-/* We don't want the label for the error handler to be visible in the symbol
-   table when we define it here.  */
-#ifdef PIC
-# define SYSCALL_ERROR_LABEL 0f
-#else
-# define SYSCALL_ERROR_LABEL __syscall_error
-#endif
+# define SYSCALL_ERROR_LABEL .Lsyscall_error
 
 #undef  PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
@@ -114,7 +108,8 @@
    be relocated anywhere, so we take precautions about calling it and
    setting up proper parameters. */
 # define SYSCALL_ERROR_HANDLER						      \
-	movi	a4, SYSCALL_ERROR_LABEL;				      \
+SYSCALL_ERROR_LABEL:							      \
+	movi	a4, __syscall_error;					      \
 	mov	a6, a2;							      \
 	callx4	a4;							      \
 	movi	a2, -1;							      \
@@ -122,6 +117,7 @@
 #else
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER						      \
+SYSCALL_ERROR_LABEL:							      \
 	movi	a4, rtld_errno;						      \
 	neg	a2, a2;							      \
 	s32i	a2, a4, 0;						      \
@@ -135,7 +131,8 @@
 #    define SYSCALL_ERROR_ERRNO errno
 #  endif
 #  define SYSCALL_ERROR_HANDLER						      \
-0:	neg	a2, a2;							      \
+SYSCALL_ERROR_LABEL:							      \
+	neg	a2, a2;							      \
 	mov	a6, a2;							      \
 	movi	a4, __errno_location@PLT;				      \
 	callx4	a4;						              \
