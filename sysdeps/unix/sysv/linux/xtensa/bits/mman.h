@@ -57,10 +57,11 @@
 
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
-# define MAP_GROWSDOWN	0x1000		/* Stack-like segment.  */
-# define MAP_DENYWRITE	0x2000		/* ETXTBSY */
-# define MAP_EXECUTABLE	0x4000		/* Mark it as an executable.  */
-# define MAP_NORESERVE	0x0400		/* Don't check for reservations.  */
+# define MAP_NORESERVE	0x00400		/* Don't check for reservations.  */
+# define MAP_GROWSDOWN	0x01000		/* Stack-like segment.  */
+# define MAP_DENYWRITE	0x02000		/* ETXTBSY */
+# define MAP_EXECUTABLE	0x04000		/* Mark it as an executable.  */
+# define MAP_STACK	0x40000		/* Allocation is for a stack.  */
 #endif
 
 /* Flags to `msync'.  */

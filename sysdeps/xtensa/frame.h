@@ -21,7 +21,7 @@
 /* Register-window ABI. */
 struct layout
 {
-  void *__unbounded return_address;
-  void *__unbounded next;
+  void * return_address;
+  void * next;
 };
 

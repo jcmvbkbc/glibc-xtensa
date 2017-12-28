@@ -88,6 +88,9 @@ typedef struct
 # define TLS_INIT_TP(tcbp)					\
   ({ __asm__ __volatile__ ("wur %0, threadptr" : : "r" (tcbp)); NULL; })
 
+/* Value passed to 'clone' for initialization of the thread register.  */
+# define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
+
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV()							\
   ({ tcbhead_t *__tcbp;							\

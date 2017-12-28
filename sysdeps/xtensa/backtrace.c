@@ -22,7 +22,6 @@
 #include <signal.h>
 #include <frame.h>
 #include <sigcontextinfo.h>
-#include <bp-checks.h>
 
 /* This is a global variable set at program start time.  It marks the
    highest used stack address.  */
@@ -44,22 +43,18 @@ extern void *__libc_stack_end;
 extern void __window_spill(void);
 
 int
-__backtrace (array, size)
-     void **array;
-     int size;
+__backtrace (void **array, int size)
 {
   struct layout *base_save_area;
-  void *__unbounded current;
-  void *__unbounded top_frame;
+  void *current;
   register void *top_stack __asm__ ("a1");
   int cnt = 0;
 
   __window_spill();
 
-  top_frame = top_stack;
-
   /* We skip the call to this function, it makes no sense to record it.  */
-  current = BOUNDED_1 (top_frame);
+  current = top_stack;
+
   while (cnt < size)
     {
       if (current < top_stack  ||  current > __libc_stack_end)
@@ -80,7 +75,7 @@ __backtrace (array, size)
       cnt++;
 
       /* Load the next frame pointer. */
-      current = BOUNDED_1 ((struct layout *) base_save_area->next);
+      current = (struct layout *) base_save_area->next;
     }
 
   return cnt;

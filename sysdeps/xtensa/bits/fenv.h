@@ -22,16 +22,21 @@
 /* Define bits representing exceptions in the FPU status word.  */
 enum
   {
-    FE_INEXACT = 1 << 7,
-#define FE_INEXACT FE_INEXACT
-    FE_UNDERFLOW = 1 << 8,
-#define FE_UNDERFLOW FE_UNDERFLOW
-    FE_OVERFLOW = 1 << 9,
-#define FE_OVERFLOW FE_OVERFLOW
-    FE_DIVBYZERO = 1 << 10,
-#define FE_DIVBYZERO FE_DIVBYZERO
-    FE_INVALID = 1 << 11,
-#define FE_INVALID FE_INVALID
+    FE_INEXACT =
+#define FE_INEXACT	(1 << 7)
+      FE_INEXACT,
+    FE_UNDERFLOW =
+#define FE_UNDERFLOW	(1 << 8)
+      FE_UNDERFLOW,
+    FE_OVERFLOW =
+#define FE_OVERFLOW	(1 << 9)
+      FE_OVERFLOW,
+    FE_DIVBYZERO =
+#define FE_DIVBYZERO	(1 << 10)
+      FE_DIVBYZERO,
+    FE_INVALID =
+#define FE_INVALID	(1 << 11)
+      FE_INVALID,
   };
 
 /* Shift amount to convert an exception to a mask bit.  */
@@ -40,17 +45,10 @@ enum
 #define FE_ALL_EXCEPT \
 	(FE_INEXACT | FE_UNDERFLOW | FE_OVERFLOW | FE_DIVBYZERO | FE_INVALID)
 
-enum
-  {
-    FE_TONEAREST = 0,
-#define FE_TONEAREST FE_TONEAREST
-    FE_TOWARDZERO = 1,
-#define FE_TOWARDZERO FE_TOWARDZERO
-    FE_UPWARD = 2,
-#define FE_UPWARD FE_UPWARD
-    FE_DOWNWARD = 4,
-#define FE_DOWNWARD FE_DOWNWARD
-  };
+#define FE_TONEAREST	0
+#define FE_TOWARDZERO	1
+#define FE_UPWARD	2
+#define FE_DOWNWARD	4
 
 /* Type representing exception flags (if there were any).  */
 typedef unsigned int fexcept_t;
