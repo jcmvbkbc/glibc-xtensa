@@ -1,5 +1,6 @@
 case "$machine" in
 xtensa*)
+	CFLAGS="$CFLAGS -mlongcalls"
 	base_machine=xtensa
 	machine=xtensa
 	;;
