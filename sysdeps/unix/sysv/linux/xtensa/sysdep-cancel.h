@@ -23,7 +23,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
+#if IS_IN(libc) || IS_IN(libpthread) || IS_IN(librt)
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
@@ -52,15 +52,15 @@
   L(pseudo_end):
 
 
-# ifdef IS_IN_libpthread
+# if IS_IN(libpthread)
 #  define CENABLE_FUNC	__pthread_enable_asynccancel
 #  define CDISABLE_FUNC	__pthread_disable_asynccancel
 #  define __local_multiple_threads __pthread_multiple_threads
-# elif !defined NOT_IN_libc
+# elif IS_IN(libc)
 #  define CENABLE_FUNC	__libc_enable_asynccancel
 #  define CDISABLE_FUNC	__libc_disable_asynccancel
 #  define __local_multiple_threads __libc_multiple_threads
-# elif defined IS_IN_librt
+# elif IS_IN(librt)
 #  define CENABLE_FUNC	__librt_enable_asynccancel
 #  define CDISABLE_FUNC	__librt_disable_asynccancel
 # else
@@ -72,7 +72,7 @@
 # define CDISABLE	movi    a8, CDISABLE_FUNC;		\
 			callx8  a8
 
-# if defined IS_IN_libpthread || !defined NOT_IN_libc
+# if IS_IN(libpthread) || IS_IN(libc)
 #  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)

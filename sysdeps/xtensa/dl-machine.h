@@ -92,6 +92,7 @@ here:	_call0	0f\n\
 #define RTLD_START \
   __asm__ ("\
 	.text\n\
+	.literal_position\n\
 	.align	4\n\
 	.global	_start\n\
 	.type	_start, @function\n\

@@ -119,3 +119,4 @@ ENTRY(__sigsetjmp)
 	mov	a2, a6
 	retw
 END(__sigsetjmp)
+libc_hidden_def (__sigsetjmp)

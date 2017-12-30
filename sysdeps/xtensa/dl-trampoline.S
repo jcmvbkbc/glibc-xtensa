@@ -46,6 +46,7 @@
 
 .macro	trampoline tramp_name fixup_name
 	.text
+	.literal_position
 	.align	4
 	.global	\tramp_name 
 	.type	\tramp_name, @function

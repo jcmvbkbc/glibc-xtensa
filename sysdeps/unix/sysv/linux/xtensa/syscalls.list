@@ -36,6 +36,6 @@ shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	__socketpair	socketpair
 
-setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit
-getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
+#setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit
+#getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
 

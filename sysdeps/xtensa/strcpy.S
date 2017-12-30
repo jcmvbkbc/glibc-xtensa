@@ -21,23 +21,28 @@
    Boston, MA 02111-1307, USA.  */
 
 
+#include <sysdep.h>
+
 #define XCHAL_HAVE_LOOPS 1
+
+#if defined(__XTENSA_EL__)
+#define MASK0 0x000000ff
+#define MASK1 0x0000ff00
+#define MASK2 0x00ff0000
+#define MASK3 0xff000000
+#elif defined(__XTENSA_EB__)
+#define MASK0 0xff000000
+#define MASK1 0x00ff0000
+#define MASK2 0x0000ff00
+#define MASK3 0x000000ff
+#else
+#error "Unsupported Xtensa endianness"
+#endif
 
 /*
  * char *strcpy(char *dst, const char *src)
  */
 .text
-.begin literal
-.align	4
-.Lmask0:
-	.byte	0xff, 0x00, 0x00, 0x00
-.Lmask1:
-	.byte	0x00, 0xff, 0x00, 0x00
-.Lmask2:
-	.byte	0x00, 0x00, 0xff, 0x00
-.Lmask3:
-	.byte	0x00, 0x00, 0x00, 0xff
-.end literal
 
 # Register use
 #   a0/ return address
@@ -52,17 +57,14 @@
 #   a9/ tmp
 #   a10/ dst
 
-.align	4
-.global	strcpy
-.type	strcpy,@function
-strcpy:
+ENTRY(strcpy)
 	entry	sp, 16		# minimal stack frame
 	# a2/ dst, a3/ src
 	mov	a10, a2		# leave dst in return value register
-	l32r	a4, .Lmask0	# mask for byte 0
-	l32r	a5, .Lmask1	# mask for byte 1
-	l32r	a6, .Lmask2	# mask for byte 2
-	l32r	a7, .Lmask3	# mask for byte 3
+	movi	a4, MASK0	# mask for byte 0
+	movi	a5, MASK1	# mask for byte 1
+	movi	a6, MASK2	# mask for byte 2
+	movi	a7, MASK3	# mask for byte 3
 	bbsi.l	a3, 0, .Lsrc1mod2 # if only  8-bit aligned
 	bbsi.l	a3, 1, .Lsrc2mod4 # if only 16-bit aligned
 .Lsrcaligned:	# return here when src is word-aligned
@@ -223,4 +225,5 @@ strcpy:
 	s8i	a8, a10, 2
 	retw
 #endif /* 0 */
+END(strcpy)
 libc_hidden_builtin_def (strcpy)

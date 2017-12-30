@@ -50,6 +50,7 @@
 
 
 	.text
+	.literal_position
 	.globl _start
 _start:
 	/* Clear a0 to mark the outermost frame obvious.  */

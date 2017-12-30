@@ -41,10 +41,9 @@
 
 
 ENTRY (__vfork)
-        .literal .Ljumptable, 0, .L4, .L8, .L12
-
  	entry	a1, 16
 	mov	a3, a0			# move return address out of the way
+	.literal .Ljumptable, 0, .L4, .L8, .L12
 	movi	a0, .Ljumptable
 	extui	a2, a3, 30, 2		# call-size: call4/8/12 = 1/2/3
 	addx4	a0, a2, a0		# find return address in jumptable

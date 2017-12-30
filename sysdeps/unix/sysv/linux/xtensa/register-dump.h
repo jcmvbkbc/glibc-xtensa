@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#if 0
 #include <sys/uio.h>
 #include <_itoa.h>
 
@@ -117,3 +118,4 @@ register_dump (int fd, struct sigcontext *ctx)
 
 
 #define REGISTER_DUMP register_dump (fd, ctx)
+#endif

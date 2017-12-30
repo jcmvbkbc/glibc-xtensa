@@ -21,25 +21,29 @@
    Boston, MA 02111-1307, USA.  */
 
 
+#include <sysdep.h>
+
 #define XCHAL_HAVE_LOOPS 1
+
+#if defined(__XTENSA_EL__)
+#define MASK0 0x000000ff
+#define MASK1 0x0000ff00
+#define MASK2 0x00ff0000
+#define MASK3 0xff000000
+#elif defined(__XTENSA_EB__)
+#define MASK0 0xff000000
+#define MASK1 0x00ff0000
+#define MASK2 0x0000ff00
+#define MASK3 0x000000ff
+#else
+#error "Unsupported Xtensa endianness"
+#endif
+#define MASK4 0x40404040
 
 /*
  * int strcmp(const char *s1, const char *s2)
  */
 .text
-.begin literal
-.align	4
-.Lmask0:
-	.byte	0xff, 0x00, 0x00, 0x00
-.Lmask1:
-	.byte	0x00, 0xff, 0x00, 0x00
-.Lmask2:
-	.byte	0x00, 0x00, 0xff, 0x00
-.Lmask3:
-	.byte	0x00, 0x00, 0x00, 0xff
-.Lmask4:
-	.byte	0x40, 0x40, 0x40, 0x40
-.end literal
 
 /*
  * Register use
@@ -56,10 +60,7 @@
  *   a10/ tmp
  */
 
-.align	4
-.global	strcmp
-.type	strcmp,@function
-strcmp:
+ENTRY(strcmp)
 	entry	sp, 16		# minimal stack frame
 	/* a2/ s1, a3/ s2 */
 
@@ -155,9 +156,8 @@ strcmp:
 	.align	4
 #if XCHAL_HAVE_LOOPS
 .Laligned:
-	.begin no-generics
-	l32r	a4, .Lmask0	# mask for byte 0
-	l32r	a7, .Lmask4
+	movi	a4, MASK0	# mask for byte 0
+	movi	a7, MASK4
         loop    a4, .Laligned_done	# loop forever (a4 is more than than
 					# the maximum number of iterations)
 
@@ -175,8 +175,8 @@ strcmp:
 #else /* !XCHAL_HAVE_LOOPS */
 
 .Laligned:
-	l32r	a4, .Lmask0	# mask for byte 0
-	l32r	a7, .Lmask4
+	movi	a4, MASK0	# mask for byte 0
+	movi	a7, MASK4
 	j	.Lfirstword
 .Lnextword:
 	addi	a2, a2, 4	# advance s1 pointer
@@ -196,16 +196,15 @@ strcmp:
           /*  if not, loop over the rest of string using normal algorithm */
 
 	bnone	a8, a4, .Leq	# if byte 0 is zero
-	l32r	a5, .Lmask1	# mask for byte 1
-	l32r	a6, .Lmask2	# mask for byte 2
+	movi	a5, MASK1	# mask for byte 1
+	movi	a6, MASK2	# mask for byte 2
 	bnone	a8, a5, .Leq	# if byte 1 is zero
-	l32r	a7, .Lmask3	# mask for byte 3
+	movi	a7, MASK3	# mask for byte 3
 	bnone	a8, a6, .Leq	# if byte 2 is zero
 	bnone	a8, a7, .Leq	# if byte 3 is zero
 	addi.n	a2, a2, 4	# advance s1 pointer
 	addi.n	a3, a3, 4	# advance s2 pointer
 #if XCHAL_HAVE_LOOPS
-	.end no-generics
 
 	# align (1 mod 4)
         loop    a4, .Leq    	# loop forever (a4 is bigger than max iters)
@@ -243,10 +242,10 @@ strcmp:
 .Lwne:	/* words are not equal */
 	xor	a2, a8, a9	# get word with nonzero in byte that differs
 	bany	a2, a4, .Ldiff0	# if byte 0 differs
-	l32r	a5, .Lmask1	# mask for byte 1
+	movi	a5, MASK1	# mask for byte 1
 	bnone	a8, a4, .Leq	# if byte 0 is zero
 	bany	a2, a5, .Ldiff1	# if byte 1 differs
-	l32r	a6, .Lmask2	# mask for byte 2
+	movi	a6, MASK2	# mask for byte 2
 	bnone	a8, a5, .Leq	# if byte 1 is zero
 	bany	a2, a6, .Ldiff2	# if byte 2 differs
 	bnone	a8, a6, .Leq	# if byte 2 is zero
@@ -297,4 +296,5 @@ strcmp:
 	sub	a2, a10, a11
 	retw
 #endif /* !__XTENSA_EB */
+END(strcmp)
 libc_hidden_builtin_def (strcmp)
