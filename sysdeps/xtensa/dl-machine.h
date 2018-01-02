@@ -129,7 +129,7 @@ _dl_start_user:\n\
 	s32i	a7, sp, 0\n\
 	# shift everything by _dl_skip_args\n\
 	addi	a5, sp, 4	# a5 = destination ptr = argv\n\
-	add	a4, a5, a4	# a4 = source ptr = argv + _dl_skip_args\n\
+	addx4	a4, a4, a5	# a4 = source ptr = argv + _dl_skip_args\n\
 	# shift argv\n\
 1:	l32i	a6, a4, 0\n\
 	addi	a4, a4, 4\n\
