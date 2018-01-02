@@ -238,6 +238,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       xtensa_got_location *got_location;
       typedef int (*mprotect_ptr) (__ptr_t, size_t, int);
       mprotect_ptr mprotect_fn;
+      caddr_t got_range_start = NULL;
+      caddr_t got_range_end = NULL;
+      int result __attribute__((unused));
 
 #ifndef DL_RO_DYN_SECTION
       l->l_info[DT_XTENSA (GOT_LOC_OFF)]->d_un.d_ptr += l->l_addr;
@@ -255,21 +258,55 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       for (g = 0; g < got_loc_entries; g++)
 	{
 	  caddr_t got_start, got_end;
-	  int result __attribute__((unused));
 
 	  got_start = ((caddr_t) l->l_addr +
 		       (got_location[g].offset & ~(XT_PAGESIZE - 1)));
 	  got_end = ((caddr_t) l->l_addr +
 		     ((got_location[g].offset + got_location[g].length
 		       + XT_PAGESIZE - 1) & ~(XT_PAGESIZE - 1)));
+	  if (got_range_start != got_range_end)
+	    {
+	      if (got_start <= got_range_end && got_end >= got_range_start)
+		{
+		  if (got_start < got_range_start)
+		    got_range_start = got_start;
+		  if (got_end > got_range_end)
+		    got_range_end = got_end;
+		}
+	      else
+		{
+		  /* In case the linker hasn't put the GOT literals on separate
+		     pages from code, keep the PROT_EXEC bit set, too.  */
+		  result = mprotect_fn (got_range_start,
+					got_range_end - got_range_start,
+					PROT_READ|PROT_WRITE|PROT_EXEC);
+#ifndef RTLD_BOOTSTRAP
+		  if (__builtin_expect (result, 0) < 0)
+		    _dl_signal_error (errno, l->l_name, NULL,
+				      N_("cannot make segment writable for relocation"));
+#endif
+		  got_range_start = got_start;
+		  got_range_end = got_end;
+		}
+	    }
+	  else
+	    {
+	      got_range_start = got_start;
+	      got_range_end = got_end;
+	    }
+	}
+
+      if (got_range_start != got_range_end)
+	{
 	  /* In case the linker hasn't put the GOT literals on separate
 	     pages from code, keep the PROT_EXEC bit set, too.  */
-	  result = mprotect_fn (got_start, got_end - got_start,
+	  result = mprotect_fn (got_range_start,
+				got_range_end - got_range_start,
 				PROT_READ|PROT_WRITE|PROT_EXEC);
 #ifndef RTLD_BOOTSTRAP
 	  if (__builtin_expect (result, 0) < 0)
-	    _dl_signal_error (errno, l->l_name, NULL, N_("\
-cannot make segment writable for relocation"));
+	    _dl_signal_error (errno, l->l_name, NULL,
+			      N_("cannot make segment writable for relocation"));
 #endif
 	}
     }
