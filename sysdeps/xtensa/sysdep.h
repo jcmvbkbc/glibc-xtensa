@@ -62,11 +62,7 @@
 
 /* Local label name for asm code. */
 #ifndef L
-# ifdef HAVE_ELF
-#  define L(name)	.L##name
-# else
-#  define L(name)	name
-# endif
+#define L(name)	name
 #endif
 
 #endif	/* __ASSEMBLER__ */
