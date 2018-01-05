@@ -16,11 +16,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-	.text
-	.align 4
+#include <errno.h>
+#include <sysdep.h>
 
-	.globl pthread_spin_trylock
-pthread_spin_trylock:
+	.text
+
+ENTRY(pthread_spin_trylock)
 
 	entry	a1, 16
 
@@ -28,10 +29,10 @@ pthread_spin_trylock:
 	wsr 	a3, scompare1
 	movi	a3, 1
 	s32c1i	a3, a2, 0
-	movi	a2, 1
-	xor	a2, a3, a2
+	movi	a4, EBUSY
+	movi	a2, 0
+	movnez	a2, a4, a3
 
-	ret
+	retw
 
-	.type pthread_spin_trylock, @function
-	.size pthread_spin_trylock, .-pthread_spin_trylock
+END(pthread_spin_trylock)
