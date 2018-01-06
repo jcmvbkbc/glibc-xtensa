@@ -28,7 +28,8 @@
 	.type	_dl_tlsdesc_return, @function
 _dl_tlsdesc_return:
 	entry	a1, 16
-	l32i	a2, a2, 0
+	rur.threadptr	a3
+	add	a2, a2, a3
 	retw
 	.size	_dl_tlsdesc_return, .-_dl_tlsdesc_return
 
