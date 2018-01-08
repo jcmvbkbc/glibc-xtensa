@@ -63,9 +63,8 @@ _dl_tlsdesc_undefweak:
 	   C code, hand-optimized a little bit.
 
 	   ptrdiff_t
-	   _dl_tlsdesc_dynamic(struct tlsdesc *tdp)
+	   _dl_tlsdesc_dynamic(struct tlsdesc_dynamic_arg *td)
 	   {
-	     dtv_t *dtv = *(dtv_t **)((char *)__thread_pointer + DTV_OFFSET);
 	     dtv_t *dtv = (dtv_t *)THREAD_DTV();
 	     if (td->gen_count <= dtv[0].counter
 	         && dtv[td->tlsinfo.ti_module].pointer.val
@@ -83,9 +82,6 @@ _dl_tlsdesc_undefweak:
 _dl_tlsdesc_dynamic:
 	entry	a1, 32
 
-	/* struct tlsdesc_dynamic_arg *td = tdp->argument.pointer; */
-	l32i	a2, a2, TLSDESC_ARG
-	
 	/* dtv_t *dtv = (dtv_t *)THREAD_DTV(); */
 	rur.threadptr	a3 
 	l32i	a4, a3, 0

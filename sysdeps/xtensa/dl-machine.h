@@ -394,7 +394,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	  if (sym != NULL)
 	    {
 	      CHECK_STATIC_TLS (map, sym_map);
-	      *reloc_addr = sym->st_value + sym_map->l_tls_offset 
+	      *reloc_addr = sym->st_value + sym_map->l_tls_offset
 		+ reloc->r_addend;
 	    }
 	}
@@ -422,11 +422,11 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	      CHECK_STATIC_TLS (map, sym_map);
 # else
 	      if (!TRY_STATIC_TLS (map, sym_map))
-	      	*reloc_addr = (ElfW(Addr))
+		*reloc_addr = (ElfW(Addr))
 		   _dl_make_tlsdesc_dynamic(sym_map, sym->st_value+*reloc_addr);
 	      else
 # endif
-		*reloc_addr += sym->st_value - sym_map->l_tls_offset;
+		*reloc_addr += sym->st_value + sym_map->l_tls_offset;
 	    }
 	}
       else
