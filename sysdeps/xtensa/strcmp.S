@@ -72,12 +72,6 @@ ENTRY(strcmp)
 	xor	a8, a2, a3	# compare low two bits of s1 and s2
 	bany	a8, a10, .Lunaligned	# if s1 and s2 have different alignment
 
-#	xor	a8, a2, a3	# compare low two bits of s1 and s2
-#	movi	a10, 3		# mask
-#	bany	a8, a10, .Lunaligned	# if s1 and s2 have different alignment
-#	/* s1 and s2 have same alignment */
-#	bnone	a2, a10, .Laligned
-
 	/* s1/s2 are not word-aligned */
 	l8ui	a8, a2, 0	# byte 0 from s1
 	l8ui	a9, a3, 0	# byte 0 from s2
@@ -118,8 +112,8 @@ ENTRY(strcmp)
 	.align	4		# (2 mod 4) alignment for loop instruction
 .Lunaligned:
 #if XCHAL_HAVE_LOOPS
-	_movi.n	a8, 0		# set up for the maximum loop count
-	loop	a8, .Lretdiff	# loop forever (almost anyway)
+	movi	a11, 0		# set up for the maximum loop count
+	loop	a11, .Lretdiff	# loop forever (almost anyway)
 #endif /* XCHAL_HAVE_LOOPS */
 .Lnextbyte:
 	l8ui	a8, a2, 0
@@ -156,10 +150,10 @@ ENTRY(strcmp)
 	.align	4
 #if XCHAL_HAVE_LOOPS
 .Laligned:
+	movi	a11, 0
 	movi	a4, MASK0	# mask for byte 0
 	movi	a7, MASK4
-        loop    a4, .Laligned_done	# loop forever (a4 is more than than
-					# the maximum number of iterations)
+	loop	a11, .Laligned_done	# loop forever
 
 	l32i	a8, a2, 0	# get word from s1
 	l32i	a9, a3, 0	# get word from s2
@@ -170,7 +164,6 @@ ENTRY(strcmp)
 	addi	a2, a2, 4	# advance s1 pointer
 	addi	a3, a3, 4	# advance s2 pointer
 .Laligned_done:
-        or	a1, a1, a1	# nop
 
 #else /* !XCHAL_HAVE_LOOPS */
 
@@ -207,7 +200,7 @@ ENTRY(strcmp)
 #if XCHAL_HAVE_LOOPS
 
 	# align (1 mod 4)
-        loop    a4, .Leq    	# loop forever (a4 is bigger than max iters)
+	loop    a11, .Leq    	# loop forever
 
 	l32i	a8, a2, 0	# get word from s1
 	l32i	a9, a3, 0	# get word from s2
