@@ -1,4 +1,7 @@
-#ifeq ($(subdir),signal)
-#sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait \
-#                   rt_sigqueueinfo rt_sigaction rt_sigpending
-#endif
+ifeq ($(subdir),stdlib)
+sysdep_routines += __start_context
+endif
+
+ifeq ($(subdir),csu)
+gen-as-const-headers += ucontext_i.sym
+endif
