@@ -142,6 +142,13 @@ SYSCALL_ERROR_LABEL:							      \
 # endif /* RTLD_PRIVATE_ERRNO */
 #endif /* PIC */
 
+#undef JUMPTARGET
+#ifdef PIC
+#define JUMPTARGET(name) name##@PLT
+#else
+#define JUMPTARGET(name) name
+#endif
+
 /* The register layout upon entering the function is:
 
    return addr	stack ptr	arg0, arg1, arg2, arg3, arg4, arg5

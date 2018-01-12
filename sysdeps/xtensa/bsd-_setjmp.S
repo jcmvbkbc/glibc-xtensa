@@ -31,11 +31,7 @@ ENTRY (_setjmp)
 	mov	a7, a3
 	movi	a8, 0
 
-#ifdef	PIC
-	movi	a4, C_SYMBOL_NAME (__sigsetjmp@PLT)
-#else
-	movi	a4, C_SYMBOL_NAME (__sigsetjmp)
-#endif
+	movi	a4, JUMPTARGET (__sigsetjmp)
 	callx4	a4
 	mov	a2, a6
 	retw

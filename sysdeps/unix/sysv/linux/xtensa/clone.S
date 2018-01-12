@@ -78,12 +78,8 @@ L(thread_start):
 
 	/* Call _exit.  Note that any return parameter from the user's
 	   function in a6 is seen as inputs to _exit. */
-#ifdef	PIC
-	movi	a2, _exit@PLT
-#else
-	movi	a2, _exit
-#endif
-	callx4	a2
+	movi	a4, JUMPTARGET(_exit)
+	callx4	a4
 
 PSEUDO_END (__clone)
 
