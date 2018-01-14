@@ -22,9 +22,10 @@
 #define _SYS_UCONTEXT_H	1
 
 #include <features.h>
-#include <signal.h>
 
+#include <bits/types/sigset_t.h>
 #include <bits/sigcontext.h>
+#include <bits/types/stack_t.h>
 
 /*
  * On Xtensa Linux, 'struct sigcontext' and 'ucontext_t' are the same.
