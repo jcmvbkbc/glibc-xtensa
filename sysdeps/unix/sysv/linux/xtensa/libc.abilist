@@ -123,7 +123,6 @@ GLIBC_2.0 __fcntl F
 GLIBC_2.0 __ffs F
 GLIBC_2.0 __finite F
 GLIBC_2.0 __finitef F
-GLIBC_2.0 __finitel F
 GLIBC_2.0 __fork F
 GLIBC_2.0 __fpu_control D 0x4
 GLIBC_2.0 __free_hook D 0x4
@@ -137,10 +136,8 @@ GLIBC_2.0 __gmtime_r F
 GLIBC_2.0 __h_errno_location F
 GLIBC_2.0 __isinf F
 GLIBC_2.0 __isinff F
-GLIBC_2.0 __isinfl F
 GLIBC_2.0 __isnan F
 GLIBC_2.0 __isnanf F
-GLIBC_2.0 __isnanl F
 GLIBC_2.0 __iswctype F
 GLIBC_2.0 __ivaliduser F
 GLIBC_2.0 __libc_calloc F
@@ -740,7 +737,6 @@ GLIBC_2.0 mbsrtowcs F
 GLIBC_2.0 mbstowcs F
 GLIBC_2.0 mbtowc F
 GLIBC_2.0 mcheck F
-GLIBC_2.0 mcount F
 GLIBC_2.0 memalign F
 GLIBC_2.0 memccpy F
 GLIBC_2.0 memchr F
@@ -1739,6 +1735,8 @@ GLIBC_2.17 clock_gettime F
 GLIBC_2.17 clock_nanosleep F
 GLIBC_2.17 clock_settime F
 GLIBC_2.17 secure_getenv F
+GLIBC_2.18 GLIBC_2.18 A
+GLIBC_2.18 __cxa_thread_atexit_impl F
 GLIBC_2.2 GLIBC_2.2 A
 GLIBC_2.2 _IO_adjust_wcolumn F
 GLIBC_2.2 _IO_fgetpos F
@@ -1834,6 +1832,7 @@ GLIBC_2.2 fwprintf F
 GLIBC_2.2 fwscanf F
 GLIBC_2.2 getdirentries64 F
 GLIBC_2.2 getloadavg F
+GLIBC_2.2 getrlimit64 F
 GLIBC_2.2 getwc F
 GLIBC_2.2 getwc_unlocked F
 GLIBC_2.2 getwchar F
@@ -1919,6 +1918,30 @@ GLIBC_2.2.4 getgrouplist F
 GLIBC_2.2.4 sockatmark F
 GLIBC_2.2.6 GLIBC_2.2.6 A
 GLIBC_2.2.6 __nanosleep F
+GLIBC_2.22 GLIBC_2.22 A
+GLIBC_2.22 fmemopen F
+GLIBC_2.23 GLIBC_2.23 A
+GLIBC_2.23 fts64_children F
+GLIBC_2.23 fts64_close F
+GLIBC_2.23 fts64_open F
+GLIBC_2.23 fts64_read F
+GLIBC_2.23 fts64_set F
+GLIBC_2.24 GLIBC_2.24 A
+GLIBC_2.24 quick_exit F
+GLIBC_2.25 GLIBC_2.25 A
+GLIBC_2.25 __explicit_bzero_chk F
+GLIBC_2.25 explicit_bzero F
+GLIBC_2.25 getentropy F
+GLIBC_2.25 getrandom F
+GLIBC_2.25 strfromd F
+GLIBC_2.25 strfromf F
+GLIBC_2.25 strfroml F
+GLIBC_2.26 GLIBC_2.26 A
+GLIBC_2.26 preadv2 F
+GLIBC_2.26 preadv64v2 F
+GLIBC_2.26 pwritev2 F
+GLIBC_2.26 pwritev64v2 F
+GLIBC_2.26 reallocarray F
 GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 __ctype_b_loc F
 GLIBC_2.3 __ctype_tolower_loc F

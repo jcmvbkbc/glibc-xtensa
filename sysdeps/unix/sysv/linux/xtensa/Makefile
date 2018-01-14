@@ -1,3 +1,5 @@
+ASFLAGS += -mlongcalls
+
 ifeq ($(subdir),stdlib)
 sysdep_routines += __start_context
 endif
