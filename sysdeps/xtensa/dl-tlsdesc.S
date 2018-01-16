@@ -62,7 +62,7 @@ _dl_tlsdesc_undefweak:
 	   The assembly code that follows is a rendition of the following
 	   C code, hand-optimized a little bit.
 
-	   ptrdiff_t
+	   void *
 	   _dl_tlsdesc_dynamic(struct tlsdesc_dynamic_arg *td)
 	   {
 	     dtv_t *dtv = (dtv_t *)THREAD_DTV();
@@ -70,8 +70,8 @@ _dl_tlsdesc_undefweak:
 	         && dtv[td->tlsinfo.ti_module].pointer.val
 	            != TLS_DTV_UNALLOCATED)
 	       return dtv[td->tlsinfo.ti_module].pointer.val
-	              + td->tlsinfo.ti_offset - __builtin_thread_pointer();
-	     return __tls_get_addr (&td->tlsinfo) - __builtin_thread_pointer();
+	              + td->tlsinfo.ti_offset;
+	     return __tls_get_addr (&td->tlsinfo);
 	   }
 	 */
 
@@ -88,27 +88,27 @@ _dl_tlsdesc_dynamic:
 
 	/* if (td->gen_count <= dtv[0].counter */
 	l32i	a6, a2, TLSDESC_GEN_COUNT
-	l32i	a7, a4, 0
+	l32i	a7, a4, DTV_COUNTER
 	blt	a7, a6, .Lslow
 
 	/* && dtv[td->tlsinfo.ti_module].pointer.val != TLS_DTV_UNALLOCATED) */
 	l32i	a6, a2, TLSDESC_MODID
-	addx8	a6, a3, a6
-	l32i	a6, a6, 0
-	beqi	a6, -1, .Lslow
+	addx8	a6, a6, a4
+	l32i	a6, a6, DTV_POINTER_VAL
+	beqi	a6, TLS_DTV_UNALLOCATED, .Lslow
 
 	/* return dtv[td->tlsinfo.ti_module].pointer.val
-	     + td->tlsinfo.ti_offset - __builtin_thread_pointer(); */
-	l32i	a6, a2, TLSDESC_MODOFF
-	sub	a2, a6, a3
+	     + td->tlsinfo.ti_offset; */
+	l32i	a5, a2, TLSDESC_MODOFF
+	add	a2, a6, a5
 	retw
 
-	/* return __tls_get_addr (&td->tlsinfo) - __builtin_thread_pointer(); */
+	/* return __tls_get_addr (&td->tlsinfo); */
 .Lslow:
 	mov	a10, a2
 	movi	a8, __tls_get_addr
 	callx8	a8
-	sub	a2, a10, a3
+	mov	a2, a10
 	retw
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
 

@@ -8,6 +8,9 @@
 
 -- 
 
+DTV_COUNTER		offsetof(dtv_t, counter)
+DTV_POINTER_VAL		offsetof(dtv_t, pointer.val)
 TLSDESC_GEN_COUNT	offsetof(struct tlsdesc_dynamic_arg, gen_count)
 TLSDESC_MODID		offsetof(struct tlsdesc_dynamic_arg, tlsinfo.ti_module)
 TLSDESC_MODOFF		offsetof(struct tlsdesc_dynamic_arg, tlsinfo.ti_offset)
+TLS_DTV_UNALLOCATED	TLS_DTV_UNALLOCATED
