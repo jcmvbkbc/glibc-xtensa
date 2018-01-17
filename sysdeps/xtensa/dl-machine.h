@@ -384,9 +384,6 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   else if (r_info != R_XTENSA_NONE)
     {
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_info);
-      ElfW(Addr) value;
-
-      value = reloc->r_addend;
 
 #ifndef RTLD_BOOTSTRAP
       if (r_info == R_XTENSA_TLS_TPOFF)
@@ -394,8 +391,8 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	  if (sym != NULL)
 	    {
 	      CHECK_STATIC_TLS (map, sym_map);
-	      *reloc_addr = sym->st_value + sym_map->l_tls_offset
-		+ reloc->r_addend;
+	      *reloc_addr =
+		sym->st_value + reloc->r_addend + sym_map->l_tls_offset;
 	    }
 	}
       else if (r_info == R_XTENSA_TLSDESC_FN)
@@ -423,15 +420,19 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 # else
 	      if (!TRY_STATIC_TLS (map, sym_map))
 		*reloc_addr = (ElfW(Addr))
-		   _dl_make_tlsdesc_dynamic(sym_map, sym->st_value+*reloc_addr);
+		  _dl_make_tlsdesc_dynamic(sym_map,
+					   sym->st_value + reloc->r_addend);
 	      else
 # endif
-		*reloc_addr += sym->st_value + sym_map->l_tls_offset;
+		*reloc_addr =
+		  sym->st_value + reloc->r_addend + sym_map->l_tls_offset;
 	    }
 	}
       else
 #endif
 	{
+	  ElfW(Addr) value = reloc->r_addend;
+
 	  if (sym_map)
 	    value += sym_map->l_addr + sym->st_value;
 
