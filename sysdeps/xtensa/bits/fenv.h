@@ -40,7 +40,7 @@ enum
   };
 
 /* Shift amount to convert an exception to a mask bit.  */
-#define FE_EXCEPT_SHIFT 7
+#define FE_EXCEPT_SHIFT 5
 
 #define FE_ALL_EXCEPT \
 	(FE_INEXACT | FE_UNDERFLOW | FE_OVERFLOW | FE_DIVBYZERO | FE_INVALID)
