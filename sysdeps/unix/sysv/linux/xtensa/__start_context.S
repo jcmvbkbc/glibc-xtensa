@@ -50,6 +50,7 @@ ENTRY(__start_context)
 	callx4	a4
 1:
 	movi	a4, JUMPTARGET (_exit)
+	movi	a6, 0
 	callx4	a4
 	ill
 END(__start_context)
