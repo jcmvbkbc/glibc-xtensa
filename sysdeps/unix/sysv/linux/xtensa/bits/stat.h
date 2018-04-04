@@ -35,7 +35,7 @@
    of the fields (specifically st_ino, st_size, and st_blocks).  */
 #define _STAT_VER_KERNEL	1
 #define _STAT_VER_LINUX		3
-#define _STAT_VER		_STAT_VER_KERNEL
+#define _STAT_VER		_STAT_VER_LINUX
 
 /* Versions of the `xmknod' interface.  */
 #define _MKNOD_VER_LINUX	0
