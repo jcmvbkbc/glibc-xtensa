@@ -39,3 +39,4 @@ socketpair	-	socketpair	i:iiif	__socketpair	socketpair
 #setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit
 #getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
 
+fanotify_mark	EXTRA	fanotify_mark	i:iiiiis	fanotify_mark
