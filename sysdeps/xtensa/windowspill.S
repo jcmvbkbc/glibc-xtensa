@@ -18,9 +18,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-
-
-
 /*
 Flush always 64 registers even if only 32 registers are available
 this ensures that window spill works in both 32 and 64 register
@@ -35,70 +32,33 @@ cases.
 .type   __window_spill,@function
 __window_spill:
 	entry	a1, 48
-        bbci.l  a0, 31, 4f		# branch if called with call4
-        bbsi.l  a0, 30, 12f		# branch if called with call12
-
-	# called with call8, touch register NUM_REGS-12 (4/20/52)
-
 #if XCHAL_NUM_AREGS > 16
 	call12	1f
+	_j	2f
 	retw
-
 	.align	4
-1:	_entry	a1, 48			# touch NUM_REGS-24 (x/8/40)
-
-#if XCHAL_NUM_AREGS == 32
-	mov	a8, a0
-	retw
-#else
-	_entry	a1, 48			# touch NUM_REGS-36 (x/x/28)
-	mov	a12, a0
-	_entry	a1, 48			# touch NUM_REGS-48 (x/x/16)
-	mov	a12, a0
-	_entry	a1, 16			# touch NUM_REGS-60 (x/x/4)
-#endif
-#endif
-	mov	a4, a0
-	retw
-
-	# called with call4, touch register NUM_REGS-8 (8/24/56)
-4:
-#if XCHAL_NUM_AREGS == 16
-	mov	a8, a0
-#else
-	call12	1f
-	retw
-
-	.align	4
-1:	_entry	a1, 48			# touch NUM_REGS-20 (x/12/44)
-	mov	a12, a0
+1:
+	_entry	a1, 48
+	addi	a12, a0, 3
 #if XCHAL_NUM_AREGS > 32
-	_entry	a1, 48			# touch NUM_REGS-32 (x/x/32)
+	.rept	(XCHAL_NUM_AREGS - 32) / 12
+	_entry	a1, 48
 	mov	a12, a0
-	_entry	a1, 48			# touch NUM_REGS-44 (x/x/20)
-	mov	a12, a0
-	_entry	a1, 48			# touch NUM_REGS-56 (x/x/8)
-	mov	a8, a0
+	.endr
 #endif
+	_entry	a1, 16
+#if XCHAL_NUM_AREGS % 12 == 0
+	mov	a8, a8
+#elif XCHAL_NUM_AREGS % 12 == 4
+	mov	a12, a12
+#elif XCHAL_NUM_AREGS % 12 == 8
+	mov	a4, a4
 #endif
 	retw
-
-	# called with call12, touch register NUM_REGS-16 (x/16/48)
-12:
-#if XCHAL_NUM_AREGS > 16
-	call12	1f
-	retw
-
-	.align	4
-1:	_entry	a1, 48			# touch NUM_REGS-28 (x/4/36)
-#if XCHAL_NUM_AREGS == 32
-	mov	a4, a0
+2:
 #else
-	mov	a12, a0
-	_entry	a1, 48			# touch NUM_REGS-40 (x/x/24)
-	mov	a12, a0
-	_entry	a1, 48			# touch NUM_REGS-52 (x/x/12)
-	mov	a12, a0
-#endif
+	mov	a12, a12
 #endif
 	retw
+
+.size __window_spill, . - __window_spill
